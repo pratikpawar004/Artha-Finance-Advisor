@@ -7,15 +7,11 @@ Artha is an AI-powered Personal Finance Advisor built using **Flask** and **Goog
 ## 📌 Features
 
 ### 🔐 User Authentication
-<img width="1053" height="768" alt="image" src="https://github.com/user-attachments/assets/0e8c2dd3-3140-4f36-9556-e45920d600da" />
-
 - Secure user registration and login
 - Password hashing using Werkzeug
 - Session management with Flask-Login
 
 ### 💵 Income & Expense Management
-<img width="1257" height="896" alt="image" src="https://github.com/user-attachments/assets/71d6780f-541f-41af-9ee4-e278ff79ecf5" />
-
 - Add income and expense transactions
 - Categorize expenses
 - Add transaction notes
@@ -23,8 +19,6 @@ Artha is an AI-powered Personal Finance Advisor built using **Flask** and **Goog
 - Delete transactions
 
 ### 📊 Dashboard
-<img width="1895" height="902" alt="Image" src="https://github.com/user-attachments/assets/099ae070-7747-4749-a7b4-ddf7af79c9bf" />
-
 - Total Income
 - Total Expenses
 - Remaining Balance
@@ -34,8 +28,6 @@ Artha is an AI-powered Personal Finance Advisor built using **Flask** and **Goog
 - Automatic Financial Insights
 
 ### 🤖 AI Finance Advisor
-<img width="1377" height="900" alt="image" src="https://github.com/user-attachments/assets/e1184691-05cf-4715-9172-a25fe280b74e" />
-
 - Powered by **Google Gemini AI**
 - Uses your real financial data before answering
 - Personalized budgeting advice
@@ -45,8 +37,6 @@ Artha is an AI-powered Personal Finance Advisor built using **Flask** and **Goog
 - Chat history stored for every user
 
 ### 📋 Transaction History
-<img width="1801" height="896" alt="Image" src="https://github.com/user-attachments/assets/84732b38-8251-4d1b-b7e8-3b6718b4960f" />
-
 - View all transactions
 - Filter transactions
 - Delete unwanted entries
@@ -55,16 +45,27 @@ Artha is an AI-powered Personal Finance Advisor built using **Flask** and **Goog
 
 # 🖼 Application Pages
 
+## 🔐 User Authentication
+<img width="1053" height="768" alt="image" src="https://github.com/user-attachments/assets/0e8c2dd3-3140-4f36-9556-e45920d600da" />
+
 ## 🏠 Dashboard
+<img width="1895" height="902" alt="Image" src="https://github.com/user-attachments/assets/099ae070-7747-4749-a7b4-ddf7af79c9bf" />
+
 Displays complete financial summary with charts and insights.
 
 ## 💳 Transactions
+<img width="1801" height="896" alt="Image" src="https://github.com/user-attachments/assets/84732b38-8251-4d1b-b7e8-3b6718b4960f" />
+
 View and manage all income and expense records.
 
 ## ➕ Add Entry
+<img width="1257" height="896" alt="image" src="https://github.com/user-attachments/assets/71d6780f-541f-41af-9ee4-e278ff79ecf5" />
+
 Add a new income or expense transaction.
 
 ## 🤖 AI Advisor
+<img width="1377" height="900" alt="image" src="https://github.com/user-attachments/assets/e1184691-05cf-4715-9172-a25fe280b74e" />
+
 Chat with Artha AI and receive personalized financial advice.
 
 ---
