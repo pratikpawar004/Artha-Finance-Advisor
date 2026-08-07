@@ -29,26 +29,11 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
- const chatBox = document.getElementById('chatBox');
+const chatBox = document.getElementById('chatBox');
 const input = document.getElementById('questionInput');
 
-function scrollToBottom() {
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-function addBubble(role, content) {
-
-    const quick = document.getElementById('quickPrompts');
-    if (quick) quick.remove();
-
-    const row = document.createElement('div');
-    row.className = 'msg-row ' + role;
-
-    const bubble = document.createElement('div');
-    bubble.className = 'msg-bubble ' + role;
-
-    // Markdown render
-    bubble.innerHTML = content
+function renderMarkdown(text) {
+    return text
         .replace(/^### (.*)$/gm, "<h3>$1</h3>")
         .replace(/^## (.*)$/gm, "<h2>$1</h2>")
         .replace(/^# (.*)$/gm, "<h1>$1</h1>")
@@ -57,22 +42,43 @@ function addBubble(role, content) {
         .replace(/^- (.*)$/gm, "<li>$1</li>")
         .replace(/(<li>.*<\/li>)/gs, "<ul>$1</ul>")
         .replace(/\n/g, "<br>");
+}
+
+function scrollToBottom() {
+    setTimeout(() => {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }, 100);
+}
+
+function addBubble(role, content) {
+
+    const quick = document.getElementById("quickPrompts");
+    if (quick) quick.remove();
+
+    const row = document.createElement("div");
+    row.className = "msg-row " + role;
+
+    const bubble = document.createElement("div");
+    bubble.className = "msg-bubble " + role;
+    bubble.innerHTML = renderMarkdown(content);
 
     row.appendChild(bubble);
     chatBox.appendChild(row);
 
-    // WhatsApp style scroll
-    requestAnimationFrame(() => {
-        chatBox.scrollTop = chatBox.scrollHeight;
-    });
+    scrollToBottom();
 
     return row;
 }
 
-// Page open hote hi latest message dikhao
-window.onload = function () {
+// Reload hone par purane messages bhi format karo
+window.addEventListener("load", () => {
+
+    document.querySelectorAll(".msg-bubble").forEach(bubble => {
+        bubble.innerHTML = renderMarkdown(bubble.textContent);
+    });
+
     scrollToBottom();
-};
+});
 
 async function send(prefill) {
 
@@ -80,13 +86,13 @@ async function send(prefill) {
 
     if (!question) return;
 
-    input.value = '';
+    input.value = "";
 
-    addBubble('user', question);
+    addBubble("user", question);
 
-    const thinking = document.createElement('div');
-    thinking.className = 'thinking';
-    thinking.textContent = 'Artha is thinking...';
+    const thinking = document.createElement("div");
+    thinking.className = "thinking";
+    thinking.textContent = "Artha is thinking...";
 
     chatBox.appendChild(thinking);
     scrollToBottom();
@@ -94,13 +100,13 @@ async function send(prefill) {
     try {
 
         const res = await fetch("{{ url_for('advisor_ask') }}", {
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json'
+                "Content-Type": "application/json"
             },
             body: JSON.stringify({
                 question
-            }),
+            })
         });
 
         const data = await res.json();
@@ -108,8 +114,8 @@ async function send(prefill) {
         thinking.remove();
 
         addBubble(
-            'assistant',
-            data.answer || data.error || 'Something went wrong.'
+            "assistant",
+            data.answer || data.error || "Something went wrong."
         );
 
     } catch (e) {
@@ -117,8 +123,8 @@ async function send(prefill) {
         thinking.remove();
 
         addBubble(
-            'assistant',
-            'Something went wrong reaching the AI advisor. Please try again.'
+            "assistant",
+            "Something went wrong reaching the AI advisor. Please try again."
         );
     }
 }
