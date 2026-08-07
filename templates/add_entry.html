@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Add Entry — Artha{% endblock %}
+{% block content %}
+<div class="page-title">Add Entry</div>
+
+<form class="form-card" method="POST" id="entryForm">
+  <div class="type-tabs">
+    <button type="button" id="expenseTab" class="expense-active" onclick="setType('expense')">Expense</button>
+    <button type="button" id="incomeTab" onclick="setType('income')">Income</button>
+  </div>
+  <input type="hidden" name="type" id="typeInput" value="expense">
+
+  <label class="field-label">Amount (₹)</label>
+  <input type="number" min="0" step="0.01" name="amount" placeholder="0" required>
+
+  <label class="field-label">Category</label>
+  <select name="category" id="categorySelect">
+    {% for c in expense_categories %}
+      <option value="{{ c }}">{{ c }}</option>
+    {% endfor %}
+  </select>
+
+  <label class="field-label">Date</label>
+  <input type="date" name="date" id="dateInput" required>
+
+  <label class="field-label">Note (optional)</label>
+  <input name="note" placeholder="e.g. Lunch with friends">
+
+  <button type="submit" class="btn btn-dark">Save entry</button>
+</form>
+
+<script>
+  const expenseCats = {{ expense_categories | tojson }};
+  const incomeCats = {{ income_categories | tojson }};
+  const categorySelect = document.getElementById('categorySelect');
+  const typeInput = document.getElementById('typeInput');
+  const expenseTab = document.getElementById('expenseTab');
+  const incomeTab = document.getElementById('incomeTab');
+
+  function fillCategories(cats) {
+    categorySelect.innerHTML = '';
+    cats.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c; opt.textContent = c;
+      categorySelect.appendChild(opt);
+    });
+  }
+
+  function setType(type) {
+    typeInput.value = type;
+    if (type === 'expense') {
+      expenseTab.classList.add('expense-active');
+      incomeTab.classList.remove('income-active');
+      fillCategories(expenseCats);
+    } else {
+      incomeTab.classList.add('income-active');
+      expenseTab.classList.remove('expense-active');
+      fillCategories(incomeCats);
+    }
+  }
+
+  document.getElementById('dateInput').value = new Date().toISOString().slice(0, 10);
+</script>
+{% endblock %}

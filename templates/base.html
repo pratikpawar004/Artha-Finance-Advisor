@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Artha — AI Finance Advisor{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  {% if current_user.is_authenticated %}
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">Artha</div>
+      <div class="hello">Hi, {{ current_user.username }}</div>
+      <nav>
+        <a href="{{ url_for('dashboard') }}" class="{{ 'active' if request.endpoint == 'dashboard' }}">Dashboard</a>
+        <a href="{{ url_for('transactions') }}" class="{{ 'active' if request.endpoint == 'transactions' }}">Transactions</a>
+        <a href="{{ url_for('add_transaction') }}" class="{{ 'active' if request.endpoint == 'add_transaction' }}">Add Entry</a>
+        <a href="{{ url_for('advisor') }}" class="{{ 'active' if request.endpoint in ['advisor','advisor_ask'] }}">AI Advisor</a>
+      </nav>
+      <a href="{{ url_for('logout') }}" class="logout">Log out</a>
+    </aside>
+    <main class="content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  {% else %}
+    {% block auth_content %}{% endblock %}
+  {% endif %}
+</body>
+</html>

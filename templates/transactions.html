@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Transactions — Artha{% endblock %}
+{% block content %}
+<div class="page-title">Transactions</div>
+
+<div class="filter-tabs">
+  <a href="{{ url_for('transactions', type='all') }}" class="{{ 'active' if filter_type == 'all' }}">All</a>
+  <a href="{{ url_for('transactions', type='income') }}" class="{{ 'active' if filter_type == 'income' }}">Income</a>
+  <a href="{{ url_for('transactions', type='expense') }}" class="{{ 'active' if filter_type == 'expense' }}">Expense</a>
+</div>
+
+<div class="txn-list">
+  {% if not txns %}
+    <div class="empty-note">No transactions here yet.</div>
+  {% else %}
+    {% for t in txns %}
+    <div class="txn-row">
+      <div class="txn-left">
+        <div class="txn-icon {{ t.type }}">{{ '↑' if t.type == 'income' else '↓' }}</div>
+        <div>
+          <div class="txn-cat">{{ t.category }}</div>
+          <div class="txn-meta">{{ t.date }}{% if t.note %} · {{ t.note }}{% endif %}</div>
+        </div>
+      </div>
+      <div class="txn-right">
+        <div class="txn-amount {{ t.type }}">{{ '+' if t.type == 'income' else '−' }}{{ t.amount | inr }}</div>
+        <form method="POST" action="{{ url_for('delete_transaction', txn_id=t.id) }}" onsubmit="return confirm('Delete this entry?');">
+          <button type="submit" class="delete-btn" title="Delete">✕</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}

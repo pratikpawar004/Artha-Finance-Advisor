@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Artha{% endblock %}
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"
+        onerror="this.onerror=null; var s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js'; document.head.appendChild(s);"></script>
+{% endblock %}
+{% block content %}
+<div class="page-title">Dashboard</div>
+
+<div class="balance-card">
+  <div class="label">Current balance</div>
+  <div class="balance-figure">{{ balance | inr }}</div>
+  <div class="balance-row">
+    <div>
+      <div class="stat-label">↑ Income</div>
+      <div class="stat-value">{{ income | inr }}</div>
+    </div>
+    <div>
+      <div class="stat-label">↓ Expenses</div>
+      <div class="stat-value">{{ expense | inr }}</div>
+    </div>
+    <div>
+      <div class="stat-label">Savings rate</div>
+      <div class="stat-value">{{ savings_rate }}%</div>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-title">Spending by category</div>
+    <div style="position: relative; height: 240px;">
+      <canvas id="categoryChart"></canvas>
+    </div>
+    <div id="categoryEmpty" class="empty-note" style="display:none;">No expenses logged yet.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Monthly trend</div>
+    <div style="position: relative; height: 240px;">
+      <canvas id="trendChart"></canvas>
+    </div>
+    <div id="trendEmpty" class="empty-note" style="display:none;">No data yet.</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">Quick insights</div>
+  {% for line in insights %}
+    <div class="insight-line"><span class="bullet">•</span> {{ line }}</div>
+  {% endfor %}
+  <a href="{{ url_for('advisor') }}" class="ask-advisor-btn">✨ Ask the AI advisor for a full plan</a>
+</div>
+
+<script>
+  const catLabels = {{ cat_labels | safe }};
+  const catValues = {{ cat_values | safe }};
+  const monthKeys = {{ month_keys | safe }};
+  const monthIncome = {{ month_income | safe }};
+  const monthExpense = {{ month_expense | safe }};
+  const palette = ['#0B6E4F', '#C98A2C', '#B4483B', '#5C6D67', '#4C8577', '#D9A441', '#8C5A4A', '#3E5C55', '#A7B8B1'];
+
+  function showError(canvasId, emptyId, text) {
+    const c = document.getElementById(canvasId);
+    const e = document.getElementById(emptyId);
+    if (c) c.style.display = 'none';
+    if (e) { e.style.display = 'block'; e.textContent = text; }
+  }
+
+  function renderCharts() {
+    if (typeof Chart === 'undefined') {
+      showError('categoryChart', 'categoryEmpty', 'Chart library failed to load. Check your internet connection or disable ad-blocker for this page.');
+      showError('trendChart', 'trendEmpty', 'Chart library failed to load. Check your internet connection or disable ad-blocker for this page.');
+      return;
+    }
+    try {
+      const catWrap = document.getElementById('categoryChart').parentElement;
+      if (catLabels.length) {
+        new Chart(document.getElementById('categoryChart'), {
+          type: 'pie',
+          data: { labels: catLabels, datasets: [{ data: catValues, backgroundColor: palette }] },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } }
+          }
+        });
+      } else {
+        showError('categoryChart', 'categoryEmpty', 'No expenses logged yet.');
+      }
+
+      if (monthKeys.length) {
+        new Chart(document.getElementById('trendChart'), {
+          type: 'bar',
+          data: {
+            labels: monthKeys,
+            datasets: [
+              { label: 'Income', data: monthIncome, backgroundColor: '#0B6E4F', borderRadius: 4 },
+              { label: 'Expense', data: monthExpense, backgroundColor: '#B4483B', borderRadius: 4 },
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } },
+            scales: { y: { beginAtZero: true } }
+          }
+        });
+      } else {
+        showError('trendChart', 'trendEmpty', 'No data yet.');
+      }
+    } catch (err) {
+      console.error('Chart render error:', err);
+      showError('categoryChart', 'categoryEmpty', 'Something went wrong drawing this chart — check the browser console.');
+      showError('trendChart', 'trendEmpty', 'Something went wrong drawing this chart — check the browser console.');
+    }
+  }
+
+  // Chart.js (or its CDN fallback) may still be loading — retry briefly instead of failing immediately.
+  let attempts = 0;
+  (function waitForChart() {
+    if (typeof Chart !== 'undefined' || attempts > 25) {
+      renderCharts();
+    } else {
+      attempts++;
+      setTimeout(waitForChart, 150);
+    }
+  })();
+</script>
+{% endblock %}

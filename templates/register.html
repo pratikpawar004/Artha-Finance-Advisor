@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Sign up — Artha{% endblock %}
+{% block auth_content %}
+<div class="auth-wrap">
+  <div class="auth-box">
+    <div class="auth-header">
+      <div class="brand">Artha</div>
+      <div class="tagline">your money, sorted — with a little AI guidance</div>
+    </div>
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <a href="{{ url_for('login') }}">Log in</a>
+        <a href="{{ url_for('register') }}" class="active">Sign up</a>
+      </div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST">
+        <label class="field-label">Username</label>
+        <input name="username" placeholder="e.g. rohan_2026" autocomplete="username" required>
+        <label class="field-label">Password</label>
+        <input type="password" name="password" placeholder="••••••••" autocomplete="new-password" required>
+        <button type="submit" class="btn btn-primary">Create account</button>
+      </form>
+    </div>
+    <div class="footnote">Final-year project demo — your data stays in your own local database.</div>
+  </div>
+</div>
+{% endblock %}

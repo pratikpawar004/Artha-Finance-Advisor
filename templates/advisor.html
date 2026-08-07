@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}AI Advisor — Artha{% endblock %}
+{% block content %}
+<div class="advisor-wrap">
+  <div class="page-title" style="margin-bottom: 6px;">AI Advisor</div>
+  <div class="advisor-sub">Ask anything about your income, spending, or savings — Artha reads your real numbers before answering.</div>
+
+  <div class="chat-box" id="chatBox">
+    {% if not history %}
+      <div class="quick-prompts" id="quickPrompts">
+        <div class="hint">Try asking:</div>
+        <button class="quick-btn" onclick="send('Am I overspending anywhere?')">Am I overspending anywhere?</button>
+        <button class="quick-btn" onclick="send('Suggest a monthly budget for me')">Suggest a monthly budget for me</button>
+        <button class="quick-btn" onclick="send('How can I save more each month?')">How can I save more each month?</button>
+      </div>
+    {% else %}
+      {% for m in history %}
+        <div class="msg-row {{ m.role }}">
+          <div class="msg-bubble {{ m.role }}">{{ m.content }}</div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <div class="chat-input-row">
+    <input type="text" id="questionInput" placeholder="Ask about your budget…" onkeydown="if(event.key==='Enter') send();">
+    <button class="send-btn" onclick="send()">Send</button>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+ const chatBox = document.getElementById('chatBox');
+const input = document.getElementById('questionInput');
+
+function scrollToBottom() {
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function addBubble(role, content) {
+
+    const quick = document.getElementById('quickPrompts');
+    if (quick) quick.remove();
+
+    const row = document.createElement('div');
+    row.className = 'msg-row ' + role;
+
+    const bubble = document.createElement('div');
+    bubble.className = 'msg-bubble ' + role;
+
+    // Markdown render
+    bubble.innerHTML = content
+        .replace(/^### (.*)$/gm, "<h3>$1</h3>")
+        .replace(/^## (.*)$/gm, "<h2>$1</h2>")
+        .replace(/^# (.*)$/gm, "<h1>$1</h1>")
+        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\*(.*?)\*/g, "<em>$1</em>")
+        .replace(/^- (.*)$/gm, "<li>$1</li>")
+        .replace(/(<li>.*<\/li>)/gs, "<ul>$1</ul>")
+        .replace(/\n/g, "<br>");
+
+    row.appendChild(bubble);
+    chatBox.appendChild(row);
+
+    // WhatsApp style scroll
+    requestAnimationFrame(() => {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
+
+    return row;
+}
+
+// Page open hote hi latest message dikhao
+window.onload = function () {
+    scrollToBottom();
+};
+
+async function send(prefill) {
+
+    const question = (prefill !== undefined ? prefill : input.value).trim();
+
+    if (!question) return;
+
+    input.value = '';
+
+    addBubble('user', question);
+
+    const thinking = document.createElement('div');
+    thinking.className = 'thinking';
+    thinking.textContent = 'Artha is thinking...';
+
+    chatBox.appendChild(thinking);
+    scrollToBottom();
+
+    try {
+
+        const res = await fetch("{{ url_for('advisor_ask') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                question
+            }),
+        });
+
+        const data = await res.json();
+
+        thinking.remove();
+
+        addBubble(
+            'assistant',
+            data.answer || data.error || 'Something went wrong.'
+        );
+
+    } catch (e) {
+
+        thinking.remove();
+
+        addBubble(
+            'assistant',
+            'Something went wrong reaching the AI advisor. Please try again.'
+        );
+    }
+}
+</script>
+{% endblock %}
