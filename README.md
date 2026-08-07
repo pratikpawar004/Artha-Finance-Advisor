@@ -48,6 +48,14 @@ Artha is an AI-powered Personal Finance Advisor built using **Flask** and **Goog
 ## 🔐 User Authentication
 <img width="1053" height="768" alt="image" src="https://github.com/user-attachments/assets/0e8c2dd3-3140-4f36-9556-e45920d600da" />
 
+#### 🔐 Login
+
+Securely sign in to access your personal finance dashboard and AI advisor.
+
+#### 📝 Sign Up
+
+Create a new account to start tracking your income, expenses, and savings.
+
 ## 🏠 Dashboard
 <img width="1895" height="902" alt="Image" src="https://github.com/user-attachments/assets/099ae070-7747-4749-a7b4-ddf7af79c9bf" />
 
