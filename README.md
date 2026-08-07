@@ -262,9 +262,11 @@ google-genai==1.34.0
 
 **Pratik Pawar**
 
-B.Tech Computer Engineering
+🎓 Bachelor of Technology (B.Tech) – Computer Engineering
 
-Dr. Babasaheb Ambedkar Technological University
+🏛️ Dr. Babasaheb Ambedkar Technological University (DBATU)
+
+📍 Maharashtra, India
 
 ---
 
