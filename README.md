@@ -92,7 +92,6 @@ artha_flask/
 ├── app.py
 ├── requirements.txt
 ├── README.md
-├── .env.example
 │
 ├── static/
 │   └── style.css
@@ -152,15 +151,54 @@ pip install -r requirements.txt
 
 ---
 
-## 4️⃣ Create .env File
+## 4️⃣ Add Your Google Gemini API Key
 
-Create a `.env` file in the project root.
+Before running the project, open the `app.py` file.
 
-```env
-SECRET_KEY=your_secret_key
+Find the following code:
 
-GEMINI_API_KEY=your_gemini_api_key
+```python
+client = genai.Client(
+    api_key="your_google_genai_api_key_here"
+)
 ```
+
+Replace `your_google_genai_api_key_here` with your own Google Gemini API key.
+
+### 🔑 How to Get a Gemini API Key
+
+1. Visit Google AI Studio:
+   https://aistudio.google.com/app/apikey
+
+2. Sign in with your Google account.
+
+3. Click **Create API Key**.
+
+4. Copy the generated API key.
+
+5. Paste it into `app.py`:
+
+```python
+client = genai.Client(
+    api_key="YOUR_GEMINI_API_KEY"
+)
+```
+
+> **Important:** Do not upload your real API key to GitHub. Before pushing your project, replace it with:
+>
+> ```python
+> api_key="your_google_genai_api_key_here"
+> ```
+
+## ⚠️ Important
+
+This repository does not include a Gemini API key.
+
+To use the AI Advisor, you must:
+
+- Create your own Gemini API key from Google AI Studio.
+- Add the key manually in `app.py`.
+- Never commit your real API key to GitHub.
 
 ---
 
