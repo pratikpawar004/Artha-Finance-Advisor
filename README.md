@@ -31,7 +31,7 @@ Artha is an AI-powered Personal Finance Advisor built using **Flask** and **Goog
 - Automatic Financial Insights
 
 ### 🤖 AI Finance Advisor
-<img width="1352" height="889" alt="Image" src="https://github.com/user-attachments/assets/bc6db8ba-d6fb-4d74-9787-909ae44c41a6" />
+<img width="1377" height="900" alt="image" src="https://github.com/user-attachments/assets/e1184691-05cf-4715-9172-a25fe280b74e" />
 - Powered by **Google Gemini AI**
 - Uses your real financial data before answering
 - Personalized budgeting advice
